@@ -23,9 +23,20 @@ def mc_trial(board, player):
     the state of the game, so the function does not return anything. In 
     other words, the function should modify the board input.
     """
-    
-    
+    while board.get_empty_squares() != []:
+        board.move(random.randrange(board.get_dim()), random.randrange(board.get_dim()), player)
+        #print board
+        board.move(random.randrange(board.get_dim()), random.randrange(board.get_dim()), provided.switch_player(player))
+        #print board
+        # check_win returns 2 and 3 therefore can't check for PLAYERX or PLAYERO
+        if board.check_win() == 2 or board.check_win() == 3: 
+            break
     print board
+    print board.check_win()
+#    board.move(0, 2, provided.switch_player(player))
+#    board.move(0, 3, provided.switch_player(player))
+#    
+    
     
 def mc_update_scores(scores, board, player):
     """
@@ -67,5 +78,5 @@ def mc_move(board, player, trials):
 
 # provided.play_game(mc_move, NTRIALS, False)        
 # poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
-mc_trial(provided.TTTBoard(5), provided.PLAYERX)
+mc_trial(provided.TTTBoard(3), provided.PLAYERX)
 #print Test

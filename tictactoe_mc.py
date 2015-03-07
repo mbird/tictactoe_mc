@@ -30,8 +30,7 @@ def mc_trial(board, player):
         if board.check_win() == 2 or board.check_win() == 3: 
             break
     print board
-    print board.check_win()
-#    return board
+#    print board.check_win()
 
     
     
@@ -44,14 +43,27 @@ def mc_update_scores(scores, board, player):
     scores grid. As the function updates the scores grid directly, 
     it does not return anything,
     """
-    scores = [[0 for x in range(board.get_dim())] for x in range(board.get_dim())]
-    for row in range(board.get_dim()):
-        for col in range(board.get_dim()):
-            if board.check_win() == 2:
+    # create grid of zeros for holding scores
+    scores = [[0 for row in range(board.get_dim())] for col in range(board.get_dim())]
+    # if X wins increase score for every move X made and decrease for O
+    if board.check_win() == 2:
+        for row in range(board.get_dim()):
+            for col in range(board.get_dim()):
                 if board.square(row, col) == 2:
                     scores[row][col] = SCORE_CURRENT
+                elif board.square(row, col) == 3:
+                    scores[row][col] = - SCORE_OTHER
+    # if O wins increase score for every move O made and decrease for X
+    elif board.check_win() ==3:
+        for row in range(board.get_dim()):
+            for col in range(board.get_dim()):
+                if board.square(row, col) == 3:
+                    scores[row][col] = SCORE_OTHER
+                elif board.square(row, col) == 2:
+                    scores[row][col] = - SCORE_CURRENT
+                
     print scores
-    print board
+#    print board
     
 def get_best_move(board, scores):
     """
@@ -82,9 +94,10 @@ def mc_move(board, player, trials):
 
 # provided.play_game(mc_move, NTRIALS, False)        
 # poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
-Board = provided.TTTBoard(3)
-scores = None
-mc_trial(Board, provided.PLAYERX)
-mc_update_scores(scores, Board, provided.PLAYERX)
 
-#print Test
+
+#Board = provided.TTTBoard(3)
+#scores = None
+#mc_trial(Board, provided.PLAYERX)
+#mc_update_scores(scores, Board, provided.PLAYERX)
+

@@ -25,17 +25,14 @@ def mc_trial(board, player):
     """
     while board.get_empty_squares() != []:
         board.move(random.randrange(board.get_dim()), random.randrange(board.get_dim()), player)
-        #print board
         board.move(random.randrange(board.get_dim()), random.randrange(board.get_dim()), provided.switch_player(player))
-        #print board
-        # check_win returns 2 and 3 therefore can't check for PLAYERX or PLAYERO
+        # check_win returns 2 (X) and 3 (O) therefore can't check for PLAYERX or PLAYERO
         if board.check_win() == 2 or board.check_win() == 3: 
             break
     print board
     print board.check_win()
-#    board.move(0, 2, provided.switch_player(player))
-#    board.move(0, 3, provided.switch_player(player))
-#    
+#    return board
+
     
     
 def mc_update_scores(scores, board, player):
@@ -47,7 +44,14 @@ def mc_update_scores(scores, board, player):
     scores grid. As the function updates the scores grid directly, 
     it does not return anything,
     """
-    
+    scores = [[0 for x in range(board.get_dim())] for x in range(board.get_dim())]
+    for row in range(board.get_dim()):
+        for col in range(board.get_dim()):
+            if board.check_win() == 2:
+                if board.square(row, col) == 2:
+                    scores[row][col] = SCORE_CURRENT
+    print scores
+    print board
     
 def get_best_move(board, scores):
     """
@@ -78,5 +82,9 @@ def mc_move(board, player, trials):
 
 # provided.play_game(mc_move, NTRIALS, False)        
 # poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
-mc_trial(provided.TTTBoard(3), provided.PLAYERX)
+Board = provided.TTTBoard(3)
+scores = None
+mc_trial(Board, provided.PLAYERX)
+mc_update_scores(scores, Board, provided.PLAYERX)
+
 #print Test

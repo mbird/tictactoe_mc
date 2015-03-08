@@ -61,8 +61,9 @@ def mc_update_scores(scores, board, player):
                     scores[row][col] = SCORE_OTHER
                 elif board.square(row, col) == 2:
                     scores[row][col] = - SCORE_CURRENT
-                
+
     print scores
+    print total_score
 #    print board
     
 def get_best_move(board, scores):
@@ -75,7 +76,18 @@ def get_best_move(board, scores):
     may do whatever it wants in that case. The case where the board 
     is full will not be tested.
     """
-    
+    row = random.randrange(board.get_dim())
+    col = random.randrange(board.get_dim())
+    print row, col
+    while scores[row][col] != 1:
+        row = random.randrange(board.get_dim())
+        col = random.randrange(board.get_dim())
+        if scores[row][col] == 1:
+            best_move = (row, col)
+            break
+    if scores[row][col] == 1:
+            best_move = (row, col)
+    return best_move
     
     
 def mc_move(board, player, trials):
@@ -86,6 +98,19 @@ def mc_move(board, player, trials):
     player in the form of a (row, column) tuple. Be sure to use the other 
     functions you have written!
     """
+    board_score = 0
+    running_total = 0
+    trials_run = 0
+    max_score = 0
+    while trials_run < trials:
+        mc_trial(board, player)
+        trials_run += 1
+        mc_update_scores(scores, board, player)
+        for row in range(board.get_dim()):
+            for col in range(board.get_dim()):
+                board_score += scores[row][col]
+        running_total += board_score
+        
 
 
 # Test game with the console or the GUI.  Uncomment whichever 
@@ -96,8 +121,10 @@ def mc_move(board, player, trials):
 # poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
 
 
-#Board = provided.TTTBoard(3)
-#scores = None
-#mc_trial(Board, provided.PLAYERX)
-#mc_update_scores(scores, Board, provided.PLAYERX)
+Board = provided.TTTBoard(3)
+#scores = []
+mc_trial(Board, provided.PLAYERX)
+mc_update_scores([], Board, provided.PLAYERX)
+#print scores
+#print get_best_move(Board, [[-1.0, -1.0, 1.0], [-1.0, 1.0, 1.0], [1.0, 0, 1.0]])
 

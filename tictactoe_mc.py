@@ -29,7 +29,7 @@ def mc_trial(board, player):
         # check_win returns 2 (X) and 3 (O) therefore can't check for PLAYERX or PLAYERO
         if board.check_win() == 2 or board.check_win() == 3: 
             break
-    print board
+#    print board
 #    print board.check_win()
 
     
@@ -44,7 +44,7 @@ def mc_update_scores(scores, board, player):
     it does not return anything,
     """
     # create grid of zeros for holding scores
-    scores = [[0 for row in range(board.get_dim())] for col in range(board.get_dim())]
+    #scores = [[0 for row in range(board.get_dim())] for col in range(board.get_dim())]
     # if X wins increase score for every move X made and decrease for O
     if board.check_win() == 2:
         for row in range(board.get_dim()):
@@ -62,9 +62,7 @@ def mc_update_scores(scores, board, player):
                 elif board.square(row, col) == 2:
                     scores[row][col] = - SCORE_CURRENT
 
-    print scores
-    print total_score
-#    print board
+    #print scores
     
 def get_best_move(board, scores):
     """
@@ -78,7 +76,6 @@ def get_best_move(board, scores):
     """
     row = random.randrange(board.get_dim())
     col = random.randrange(board.get_dim())
-    print row, col
     while scores[row][col] != 1:
         row = random.randrange(board.get_dim())
         col = random.randrange(board.get_dim())
@@ -102,14 +99,23 @@ def mc_move(board, player, trials):
     running_total = 0
     trials_run = 0
     max_score = 0
+    best_board = []
     while trials_run < trials:
         mc_trial(board, player)
         trials_run += 1
-        mc_update_scores(scores, board, player)
+        mc_update_scores(grid_score, board, player)
+        #print grid_score
         for row in range(board.get_dim()):
             for col in range(board.get_dim()):
-                board_score += scores[row][col]
+                board_score += grid_score[row][col]
+                if board_score > max_score:
+                    max_score = board_score
+                    best_board = board.clone()
+                    best_scores = grid_score
         running_total += board_score
+    best_move = get_best_move(best_board, best_scores)
+    #print best_move
+    return best_move
         
 
 
@@ -121,10 +127,10 @@ def mc_move(board, player, trials):
 # poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
 
 
-Board = provided.TTTBoard(3)
-#scores = []
-mc_trial(Board, provided.PLAYERX)
-mc_update_scores([], Board, provided.PLAYERX)
-#print scores
+#Board = provided.TTTBoard(3)
+#grid_score = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+#mc_trial(Board, provided.PLAYERX)
+#mc_update_scores(grid_score, Board, provided.PLAYERX)
+#print grid_score
 #print get_best_move(Board, [[-1.0, -1.0, 1.0], [-1.0, 1.0, 1.0], [1.0, 0, 1.0]])
-
+#mc_move(Board, provided.PLAYERX, 10)

@@ -23,23 +23,28 @@ def mc_trial(board, player):
     the state of the game, so the function does not return anything. In 
     other words, the function should modify the board input.
     """
-#    print board
-#    print board.get_empty_squares()
+    print "Empty board"
+    print board
+    print board.get_empty_squares()
     while board.get_empty_squares() != []:
         empty_squares = board.get_empty_squares()
-        next_move = random.randrange(len(empty_squares))
-        board.move(empty_squares[next_move][0], empty_squares[next_move][1], player)
-#        print board
-#        print board.get_empty_squares()
+        next_move = random.choice(empty_squares)
+        board.move(next_move[0], next_move[1], player)
+        print "player 1"
+        print board
+        print board.get_empty_squares()
         # check_win returns 2 (X) and 3 (O) therefore can't check for PLAYERX or PLAYERO
+        print board.check_win()
         if board.check_win() == 2 or board.check_win() == 3: 
             break
         empty_squares = board.get_empty_squares()
-        next_move = random.randrange(len(empty_squares))
-        board.move(empty_squares[next_move][0], empty_squares[next_move][1], provided.switch_player(player))    
-#        print board
-#        print board.get_empty_squares()
+        next_move = random.choice(empty_squares)
+        board.move(next_move[0], next_move[1], provided.switch_player(player))   
+        print "player 2"
+        print board
+        print board.get_empty_squares()
         # check_win returns 2 (X) and 3 (O) therefore can't check for PLAYERX or PLAYERO
+        print board.check_win()
         if board.check_win() == 2 or board.check_win() == 3: 
             break
 #    print board
@@ -87,17 +92,22 @@ def get_best_move(board, scores):
     may do whatever it wants in that case. The case where the board 
     is full will not be tested.
     """
-    row = random.randrange(board.get_dim())
-    col = random.randrange(board.get_dim())
-    while scores[row][col] != 0:
-        row = random.randrange(board.get_dim())
-        col = random.randrange(board.get_dim())
-        if scores[row][col] == 0:
-            best_move = (row, col)
-            break
-    if scores[row][col] == 0:
-            best_move = (row, col)
-    return best_move
+    empty_squares = board.get_empty_squares()
+    if empty_squares == []:
+        print "There are no empty squares left."
+        return 0
+    return random.choice(empty_squares)
+#    row = random.randrange(board.get_dim())
+#    col = random.randrange(board.get_dim())
+#    while scores[row][col] != 0:
+#        row = random.randrange(board.get_dim())
+#        col = random.randrange(board.get_dim())
+#        if scores[row][col] == 0:
+#            best_move = (row, col)
+#            break
+#    if scores[row][col] == 0:
+#            best_move = (row, col)
+#    return best_move
     
     
 def mc_move(board, player, trials):
@@ -128,9 +138,9 @@ def mc_move(board, player, trials):
                     best_scores = grid_score
         running_total += board_score
     best_scores = grid_score
-    best_move = get_best_move(best_board, best_scores)
+#    best_move = get_best_move(best_board, best_scores)
     #print best_move
-    return best_move
+    return get_best_move(board, grid_score)
         
 
 

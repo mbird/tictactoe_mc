@@ -23,33 +23,16 @@ def mc_trial(board, player):
     the state of the game, so the function does not return anything. In 
     other words, the function should modify the board input.
     """
-    print "Empty board"
-    print board
-    print board.get_empty_squares()
+    player = player
+    
     while board.get_empty_squares() != []:
-        empty_squares = board.get_empty_squares()
-        next_move = random.choice(empty_squares)
-        board.move(next_move[0], next_move[1], player)
-        print "player 1"
-        print board
-        print board.get_empty_squares()
-        # check_win returns 2 (X) and 3 (O) therefore can't check for PLAYERX or PLAYERO
-        print board.check_win()
-        if board.check_win() == 2 or board.check_win() == 3: 
+        square = random.choice(board.get_empty_squares())
+        board.move(square[0], square[1], player)
+        if board.check_win() != None:
             break
-        empty_squares = board.get_empty_squares()
-        next_move = random.choice(empty_squares)
-        board.move(next_move[0], next_move[1], provided.switch_player(player))   
-        print "player 2"
-        print board
-        print board.get_empty_squares()
-        # check_win returns 2 (X) and 3 (O) therefore can't check for PLAYERX or PLAYERO
-        print board.check_win()
-        if board.check_win() == 2 or board.check_win() == 3: 
-            break
-#    print board
-#    print board.check_win()
-
+        player = provided.switch_player(player)
+        
+    print board
     
     
 def mc_update_scores(scores, board, player):
@@ -61,26 +44,24 @@ def mc_update_scores(scores, board, player):
     scores grid. As the function updates the scores grid directly, 
     it does not return anything,
     """
-    # create grid of zeros for holding scores
-    #scores = [[0 for row in range(board.get_dim())] for col in range(board.get_dim())]
-    # if X wins increase score for every move X made and decrease for O
     if board.check_win() == 2:
         for row in range(board.get_dim()):
             for col in range(board.get_dim()):
                 if board.square(row, col) == 2:
-                    scores[row][col] = SCORE_CURRENT
+                    scores[row][col] += SCORE_CURRENT
                 elif board.square(row, col) == 3:
-                    scores[row][col] = - SCORE_OTHER
-    # if O wins increase score for every move O made and decrease for X
-    elif board.check_win() ==3:
+                    scores[row][col] += - SCORE_OTHER
+    elif board.check_win() == 3:
         for row in range(board.get_dim()):
             for col in range(board.get_dim()):
                 if board.square(row, col) == 3:
-                    scores[row][col] = SCORE_OTHER
+                    scores[row][col] += SCORE_CURRENT
                 elif board.square(row, col) == 2:
-                    scores[row][col] = - SCORE_CURRENT
-
-    #print scores
+                    scores[row][col] += - SCORE_OTHER
+                    
+    print scores
+                
+    
     
 def get_best_move(board, scores):
     """
@@ -93,22 +74,18 @@ def get_best_move(board, scores):
     is full will not be tested.
     """
     empty_squares = board.get_empty_squares()
-    if empty_squares == []:
-        print "There are no empty squares left."
-        return 0
-    return random.choice(empty_squares)
-#    row = random.randrange(board.get_dim())
-#    col = random.randrange(board.get_dim())
-#    while scores[row][col] != 0:
-#        row = random.randrange(board.get_dim())
-#        col = random.randrange(board.get_dim())
-#        if scores[row][col] == 0:
-#            best_move = (row, col)
-#            break
-#    if scores[row][col] == 0:
-#            best_move = (row, col)
-#    return best_move
+    max_score = 0
+    possible_moves = []
     
+    for row in range(board.get_dim()):
+        for col in range(board.get_dim()):
+            if board.square(row, col) > max_score:
+                max_score = board.square(row, col)
+                possible_moves.append((row, col))
+                
+    best_move = random.choice(possible_moves)
+    print best_move
+    return best_move
     
 def mc_move(board, player, trials):
     """
@@ -118,29 +95,7 @@ def mc_move(board, player, trials):
     player in the form of a (row, column) tuple. Be sure to use the other 
     functions you have written!
     """
-    board_score = 0
-    running_total = 0
-    trials_run = 0
-    max_score = 0
-    best_board = []
-    grid_score = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-    while trials_run < trials:
-        mc_trial(board, player)
-        trials_run += 1
-        mc_update_scores(grid_score, board, player)
-        #print grid_score
-        for row in range(board.get_dim()):
-            for col in range(board.get_dim()):
-                board_score += grid_score[row][col]
-                if board_score > max_score:
-                    max_score = board_score
-                    best_board = board.clone()
-                    best_scores = grid_score
-        running_total += board_score
-    best_scores = grid_score
-#    best_move = get_best_move(best_board, best_scores)
-    #print best_move
-    return get_best_move(board, grid_score)
+   
         
 
 
@@ -148,14 +103,10 @@ def mc_move(board, player, trials):
 # you prefer.  Both should be commented out when you submit 
 # for testing to save time.
 
-provided.play_game(mc_move, NTRIALS, False)        
+#provided.play_game(mc_move, NTRIALS, False)        
 #poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
-
-
 #Board = provided.TTTBoard(3)
-#grid_score = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 #mc_trial(Board, provided.PLAYERX)
+#
+#grid_score = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 #mc_update_scores(grid_score, Board, provided.PLAYERX)
-#print grid_score
-#print get_best_move(Board, [[-1.0, -1.0, 1.0], [-1.0, 1.0, 1.0], [1.0, 0, 1.0]])
-#mc_move(Board, provided.PLAYERX, 10)

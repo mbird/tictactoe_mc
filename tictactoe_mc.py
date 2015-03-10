@@ -74,24 +74,17 @@ def get_best_move(board, scores):
     max_score = 0
     possible_moves = []
     
-    print "empty_squares:\n", empty_squares
-    print "scores:\n", scores
     if empty_squares == []:
         return 
     else:
         for square in empty_squares:
-            print square
-            print "max score", max_score
-            print "square score", scores[square[0]][square[1]]
             if scores[square[0]][square[1]] >= max_score:
                 max_score = scores[square[0]][square[1]]
                 
         for square in empty_squares:
             if scores[square[0]][square[1]] == max_score:
                 possible_moves.append((square[0], square[1]))
-        print "possible moves", possible_moves
 
-        print max_score
         best_move = random.choice(possible_moves)
         return best_move
     
@@ -124,8 +117,3 @@ def mc_move(board, player, trials):
 
 #provided.play_game(mc_move, NTRIALS, False)        
 #poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
-#Board = provided.TTTBoard(3)
-#mc_trial(Board, provided.PLAYERX)
-#
-#grid_score = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-#mc_update_scores(grid_score, Board, provided.PLAYERX

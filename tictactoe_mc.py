@@ -9,7 +9,7 @@ import poc_ttt_provided as provided
 # Constants for Monte Carlo simulator
 # You may change the values of these constants as desired, but
 #  do not change their names.
-NTRIALS = 1         # Number of trials to run
+NTRIALS = 10        # Number of trials to run
 SCORE_CURRENT = 1.0 # Score for squares played by the current player
 SCORE_OTHER = 1.0   # Score for squares played by the other player
 
@@ -32,7 +32,6 @@ def mc_trial(board, player):
             break
         player = provided.switch_player(player)
         
-    print board
     
     
 def mc_update_scores(scores, board, player):
@@ -58,8 +57,6 @@ def mc_update_scores(scores, board, player):
                     scores[row][col] += SCORE_CURRENT
                 elif board.square(row, col) == 2:
                     scores[row][col] += - SCORE_OTHER
-                    
-    print scores
                 
     
     
@@ -77,15 +74,26 @@ def get_best_move(board, scores):
     max_score = 0
     possible_moves = []
     
-    for row in range(board.get_dim()):
-        for col in range(board.get_dim()):
-            if board.square(row, col) > max_score:
-                max_score = board.square(row, col)
-                possible_moves.append((row, col))
+    print "empty_squares:\n", empty_squares
+    print "scores:\n", scores
+    if empty_squares == []:
+        return 
+    else:
+        for square in empty_squares:
+            print square
+            print "max score", max_score
+            print "square score", scores[square[0]][square[1]]
+            if scores[square[0]][square[1]] >= max_score:
+                max_score = scores[square[0]][square[1]]
                 
-    best_move = random.choice(possible_moves)
-    print best_move
-    return best_move
+        for square in empty_squares:
+            if scores[square[0]][square[1]] == max_score:
+                possible_moves.append((square[0], square[1]))
+                print "possible moves", possible_moves
+
+        print max_score
+        best_move = random.choice(possible_moves)
+        return best_move
     
 def mc_move(board, player, trials):
     """
@@ -95,6 +103,17 @@ def mc_move(board, player, trials):
     player in the form of a (row, column) tuple. Be sure to use the other 
     functions you have written!
     """
+    scores = [[0 for dummy_col in range(board.get_dim())] for dummy_row in range(board.get_dim())]
+    
+    for dummy_trial in range(trials):
+        new_board = board.clone()
+        mc_trial(new_board, player)
+        mc_update_scores(scores, new_board, player)
+        
+    return get_best_move(board, scores)
+        
+        
+                                                                    
    
         
 
@@ -103,7 +122,7 @@ def mc_move(board, player, trials):
 # you prefer.  Both should be commented out when you submit 
 # for testing to save time.
 
-#provided.play_game(mc_move, NTRIALS, False)        
+provided.play_game(mc_move, NTRIALS, False)        
 #poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
 #Board = provided.TTTBoard(3)
 #mc_trial(Board, provided.PLAYERX)

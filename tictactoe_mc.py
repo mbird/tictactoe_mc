@@ -9,7 +9,7 @@ import poc_ttt_provided as provided
 # Constants for Monte Carlo simulator
 # You may change the values of these constants as desired, but
 #  do not change their names.
-NTRIALS = 10        # Number of trials to run
+NTRIALS = 1        # Number of trials to run
 SCORE_CURRENT = 1.0 # Score for squares played by the current player
 SCORE_OTHER = 1.0   # Score for squares played by the other player
 
@@ -89,7 +89,7 @@ def get_best_move(board, scores):
         for square in empty_squares:
             if scores[square[0]][square[1]] == max_score:
                 possible_moves.append((square[0], square[1]))
-                print "possible moves", possible_moves
+        print "possible moves", possible_moves
 
         print max_score
         best_move = random.choice(possible_moves)
@@ -122,10 +122,10 @@ def mc_move(board, player, trials):
 # you prefer.  Both should be commented out when you submit 
 # for testing to save time.
 
-provided.play_game(mc_move, NTRIALS, False)        
+#provided.play_game(mc_move, NTRIALS, False)        
 #poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
 #Board = provided.TTTBoard(3)
 #mc_trial(Board, provided.PLAYERX)
 #
 #grid_score = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-#mc_update_scores(grid_score, Board, provided.PLAYERX)
+#mc_update_scores(grid_score, Board, provided.PLAYERX
